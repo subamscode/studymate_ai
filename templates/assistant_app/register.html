@@ -1,0 +1,56 @@
+
+{% extends 'assistant_app/base.html' %}
+
+{% block title %}Create Account | StudyMate AI{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <a class="brand" href="{% url 'home' %}">
+        ✦ StudyMate <span>AI</span>
+    </a>
+
+    <form class="auth-card" method="post">
+        {% csrf_token %}
+
+        <div class="eyebrow">YOUR LEARNING SPACE</div>
+
+        <h1>Make room to learn.</h1>
+        <p>Create your free account to get started.</p>
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <small class="field-error">{{ error }}</small>
+                    {% endfor %}
+                {% endif %}
+
+                {% if field.help_text %}
+                    <small class="help-text">{{ field.help_text|safe }}</small>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button class="button full" type="submit">
+            Create account →
+        </button>
+
+        <div class="auth-switch">
+            Already have an account?
+            <a href="{% url 'login' %}">Log in</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

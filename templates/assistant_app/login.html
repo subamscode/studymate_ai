@@ -1,0 +1,51 @@
+
+{% extends 'assistant_app/base.html' %}
+
+{% block title %}Log in | StudyMate AI{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <a class="brand" href="{% url 'home' %}">
+        ✦ StudyMate <span>AI</span>
+    </a>
+
+    <form class="auth-card" method="post">
+        {% csrf_token %}
+
+        <div class="eyebrow">WELCOME BACK</div>
+        <h1>Good to see you.</h1>
+        <p>Pick up where your curiosity left off.</p>
+
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+
+        <label for="username">Username</label>
+        <input
+            id="username"
+            class="form-control"
+            type="text"
+            name="username"
+            required
+            autocomplete="username"
+        >
+
+        <label for="password">Password</label>
+        <input
+            id="password"
+            class="form-control"
+            type="password"
+            name="password"
+            required
+            autocomplete="current-password"
+        >
+
+        <button class="button full" type="submit">Log in →</button>
+
+        <div class="auth-switch">
+            New here?
+            <a href="{% url 'register' %}">Create an account</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

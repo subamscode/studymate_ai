@@ -1,0 +1,151 @@
+
+{% extends 'assistant_app/base.html' %}
+
+{% block title %}AI Tutor | StudyMate AI{% endblock %}
+
+{% block content %}
+<div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+        <a class="brand" href="{% url 'chat' %}">
+            ✦ StudyMate <span>AI</span>
+        </a>
+
+        <form method="post" action="{% url 'new_chat' %}">
+            {% csrf_token %}
+            <button class="new-chat" type="submit">＋ New conversation</button>
+        </form>
+
+        <div class="side-label">YOUR WORKSPACE</div>
+
+        <a class="side-link active" href="{% url 'chat' %}">✦ AI tutor</a>
+        <a class="side-link" href="{% url 'documents' %}">
+            ▤ My study notes <span>{{ documents.count }}</span>
+        </a>
+
+        <div class="side-label recent">RECENT CHATS</div>
+
+        {% for item in chat_sessions %}
+            <a
+                class="history-link {% if item.id == session.id %}selected{% endif %}"
+                href="{% url 'chat_session' item.id %}"
+            >
+                ◌ {{ item.title|truncatechars:28 }}
+            </a>
+        {% empty %}
+            <p class="muted">Your conversations appear here.</p>
+        {% endfor %}
+
+        <div class="user-bottom">
+            <b>{{ request.user.username }}</b>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" title="Log out" class="logout">↪</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="chat-main">
+        <header class="topbar">
+            <button type="button" id="menuButton" class="menu-button">☰</button>
+            <div>
+                <b>AI Tutor</b>
+                <small>A space to figure things out</small>
+            </div>
+            <span class="local-status">● Ollama local AI</span>
+        </header>
+
+        <section class="conversation" id="conversation">
+            {% if not messages_list %}
+                <div class="welcome">
+                    <div class="welcome-icon">✦</div>
+                    <div class="eyebrow">YOUR LEARNING SPACE</div>
+
+                    <h1>
+                        Hey {{ request.user.username|title }},<br>
+                        <span>what are we learning today?</span>
+                    </h1>
+
+                    <p>
+                        Ask a question, explore a concept, or work through
+                        a coding problem one step at a time.
+                    </p>
+
+                    <div class="suggestions">
+                        <button type="button"
+                                data-prompt="Explain Python functions with a simple example.">
+                            <b>⌘　Explain a concept</b>
+                            <small>Python functions, SQL joins…</small>
+                        </button>
+
+                        <button type="button"
+                                data-prompt="Help me debug a Python error and explain the cause.">
+                            <b>{ }　Debug my code</b>
+                            <small>Understand the why, not just the fix</small>
+                        </button>
+
+                        <button type="button"
+                                data-prompt="Create five beginner-friendly Python practice questions with answers.">
+                            <b>✓　Practice a topic</b>
+                            <small>Build confidence with examples</small>
+                        </button>
+
+                        <button type="button"
+                                data-prompt="Summarize my uploaded study notes and list the key ideas.">
+                            <b>▤　Study my notes</b>
+                            <small>Ask about uploaded PDF or TXT files</small>
+                        </button>
+                    </div>
+                </div>
+            {% else %}
+                <div class="message-list">
+                    {% for message in messages_list %}
+                        <article class="message {{ message.role }}">
+                            <div class="message-icon">
+                                {% if message.role == 'user' %}
+                                    {{ request.user.username|first|upper }}
+                                {% else %}
+                                    ✦
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <b class="message-name">
+                                    {% if message.role == 'user' %}
+                                        You
+                                    {% else %}
+                                        StudyMate AI
+                                    {% endif %}
+                                </b>
+
+                                <div class="message-content">{{ message.content }}</div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
+
+        <div class="composer-area">
+            <div class="note-tip">
+                ✧ <a href="{% url 'documents' %}">Upload your notes</a>
+                to ask questions about them.
+            </div>
+
+            <form class="composer" method="post" id="chatForm">
+                {% csrf_token %}
+                {{ form.message }}
+                <button type="submit" class="send-button" aria-label="Send">↑</button>
+            </form>
+
+            {% for error in form.message.errors %}
+                <small class="field-error">{{ error }}</small>
+            {% endfor %}
+
+            <div class="disclaimer">
+                StudyMate can make mistakes.
+                Check important information with your course material.
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

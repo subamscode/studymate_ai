@@ -1,0 +1,78 @@
+{% extends 'assistant_app/base.html' %}
+
+{% block title %}StudyMate AI | Learn with clarity{% endblock %}
+
+{% block content %}
+<nav class="landing-nav">
+    <a class="brand" href="/">✦ StudyMate <span>AI</span></a>
+    <div>
+        <a class="login-link" href="{% url 'login' %}">Log in</a>
+        <a class="button" href="{% url 'register' %}">Get started →</a>
+    </div>
+</nav>
+
+<main class="hero">
+    <section>
+        <div class="eyebrow">YOUR PERSONAL AI STUDY PARTNER</div>
+        <h1>Understand more.<br><span>Stress less.</span></h1>
+        <p class="lead">
+            A calmer way to learn. Ask questions, work through code,
+            and turn your own notes into answers you can understand.
+        </p>
+        <a class="button big" href="{% url 'register' %}">
+            Start learning free →
+        </a>
+        <p class="trust">Built for curious minds and future builders.</p>
+    </section>
+
+    <section class="preview">
+        <div class="preview-head">
+            ✦
+            <div>
+                <b>StudyMate AI</b>
+                <small>Your study companion</small>
+            </div>
+            <i></i>
+        </div>
+
+        <div class="question">
+            Can you explain Python loops with a simple example?
+        </div>
+
+        <div class="answer">
+            <b>Absolutely! Let's make it simple.</b>
+            <p>A <strong>for loop</strong> repeats code for each item in a sequence.</p>
+            <pre>for number in range(1, 4):
+    print(number)
+# Prints 1, 2, 3</pre>
+            <p>Think of it as a short, repeatable instruction.</p>
+        </div>
+
+        <div class="fake-input">Ask a follow-up question… ↑</div>
+    </section>
+</main>
+
+<section class="features">
+    <div class="eyebrow">ONE SPACE. MORE CLARITY.</div>
+    <h2>Made for the way you learn.</h2>
+
+    <div class="feature-grid">
+        <article>
+            <b>✦ Ask anything</b>
+            <p>Understand study topics and tricky concepts with friendly explanations.</p>
+        </article>
+
+        <article>
+            <b>{ } Code with confidence</b>
+            <p>Explore examples, understand logic, and debug step by step.</p>
+        </article>
+
+        <article>
+            <b>▤ Learn from your notes</b>
+            <p>Upload PDF or TXT notes and ask questions about your material.</p>
+        </article>
+    </div>
+</section>
+
+<footer>StudyMate AI · A little more clarity, every day.</footer>
+{% endblock %}

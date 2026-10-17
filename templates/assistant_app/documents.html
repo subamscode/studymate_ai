@@ -1,0 +1,111 @@
+
+{% extends 'assistant_app/base.html' %}
+
+{% block title %}My Study Notes | StudyMate AI{% endblock %}
+
+{% block content %}
+<div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+        <a class="brand" href="{% url 'chat' %}">✦ StudyMate <span>AI</span></a>
+
+        <nav>
+            <a href="{% url 'chat' %}">✦ AI Tutor</a>
+            <a class="active" href="{% url 'documents' %}">▤ My Study Notes</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <span>{{ request.user.username }}</span>
+            <a href="{% url 'logout' %}">Log out ↗</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <button type="button" class="menu-button" id="menuToggle">☰</button>
+            <div>
+                <h1>My Study Notes</h1>
+                <p>Upload and manage your learning materials.</p>
+            </div>
+        </header>
+
+        <div class="documents-page">
+            <section class="upload-card">
+                <h2>Upload a document</h2>
+                <p>Choose a PDF or TXT file to ask questions about your notes.</p>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+
+                            {% if field.errors %}
+                                <div class="field-error">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <button class="button" type="submit">Upload notes ↑</button>
+                </form>
+            </section>
+
+            <section class="library-card">
+                <h2>Your library</h2>
+
+                <div class="document-list">
+                    {% for doc in documents %}
+                        <div class="document-item">
+                            <div class="file-badge">
+                                {% if doc.original_name|lower|slice:"-4:" == ".pdf" %}
+                                    PDF
+                                {% else %}
+                                    TXT
+                                {% endif %}
+                            </div>
+
+                            <div class="document-info">
+                                <b>{{ doc.original_name }}</b>
+                                <small>
+                                    {{ doc.uploaded_at|date:"M j, Y" }}
+                                    · {{ doc.chunk_count }} chunks
+                                </small>
+
+                                {% if doc.status == "failed" %}
+                                    <small class="field-error">
+                                        {{ doc.error_message }}
+                                    </small>
+                                {% endif %}
+                            </div>
+
+                            <span class="status {{ doc.status }}">{{ doc.status }}</span>
+
+                            <form method="post"
+                                  action="{% url 'delete_document' doc.id %}"
+                                  onsubmit="return confirm('Delete this document?')">
+                                {% csrf_token %}
+                                <button class="delete-button" type="submit"
+                                        aria-label="Delete document">×</button>
+                            </form>
+                        </div>
+                    {% empty %}
+                        <div class="empty-library">
+                            <b>Your library is waiting.</b>
+                            <p>Upload your first notes to get started.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <a class="back-link" href="{% url 'chat' %}">← Back to AI tutor</a>
+            </section>
+        </div>
+    </main>
+</div>
+{% endblock %}
