@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ✦ StudyMate AI — Your Personal AI Study Partner
 
 **StudyMate AI** is an AI-powered learning assistant built to help students understand concepts, practice programming, and learn from their own study materials. Developed using Python and Django, it combines conversational AI with Retrieval-Augmented Generation (RAG) to answer questions using uploaded documents.
@@ -179,3 +180,7 @@ If you find this project useful, consider giving the repository a star on GitHub
 ---
 
 *StudyMate AI — Learn smarter. Understand deeper. Build with confidence.*
+=======
+# studymate_ai
+An AI-powered study assistant that answers questions, explains coding concepts, and helps students learn from uploaded PDF and TXT notes.
+>>>>>>> origin/main
